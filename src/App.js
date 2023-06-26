@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./style.css";
+import Menu from "./components/Api";
+import Card from "./components/Card";
+import Navbar from "./components/Navbar";
+
+const uniqueCategoryList = [
+  //data structure to store unique category
+  ...new Set(
+    Menu.map((item) => {
+      return item.category;
+    })
+  ),
+  "All",
+];
+// console.log(uniqueCategoryList);
 
 function App() {
+  const [menuData, setMenuData] = useState(Menu);
+  // console.log(menuData);
+
+  const filterCategory = (category) => {
+    if (category === "All") {
+      setMenuData(Menu);
+      return;
+    }
+
+    const updatedList = Menu.filter((item) => {
+      return item.category === category;
+    });
+    setMenuData(updatedList);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar
+        filterCategory={filterCategory}
+        categoryList={uniqueCategoryList}
+      />
+      <Card menuData={menuData} />;
+    </>
   );
 }
 
